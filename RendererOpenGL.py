@@ -17,27 +17,10 @@ clock = pygame.time.Clock()
 rend = Renderer(screen)
 rend.setShaders(shaders.vertex_shader, shaders.fragment_shader)
 
-vertex_data = np.array([-0.5,-0.5, 0.5, 1.0, 0.0, 0.0,
-                        -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
-                         0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
-                         0.5,-0.5, 0.5, 1.0, 1.0, 0.0,
-                        -0.5,-0.5,-0.5, 1.0, 0.0, 1.0,
-                        -0.5, 0.5,-0.5, 0.0, 1.0, 1.0,
-                         0.5, 0.5,-0.5, 1.0, 1.0, 1.0,
-                         0.5,-0.5,-0.5, 0.0, 0.0, 0.0], dtype = np.float32)
+face = Model('model.obj', 'model.bmp')
+face.position.z = -5
 
-index_data = np.array([0,1,3, 1,2,3,
-                       1,5,2, 5,6,2,
-                       4,5,0, 5,1,0,
-                       3,2,7, 6,2,7,
-                       4,0,7, 0,3,7,
-                       5,4,6, 4,7,6], dtype = np.uint32)
-
-cube = Model(vertex_data, index_data )
-
-cube.position.z = -5.0
-
-rend.scene.append( cube )
+rend.scene.append( face )
 
 
 isRunning = True
@@ -60,17 +43,19 @@ while isRunning:
     if keys[K_e]:
         rend.camPosition.y += 1 * deltaTime
 
+    if keys[K_LEFT]:
+        if rend.valor > 0:
+            rend.valor -= 0.1 * deltaTime
+
+    if keys[K_RIGHT]:
+        if rend.valor < 0.2:
+            rend.valor += 0.1 * deltaTime
+
     # Rotacion de camara
     if keys[K_z]:
         rend.camRotation.y += 15 * deltaTime
     if keys[K_x]:
         rend.camRotation.y -= 15 * deltaTime
-
-
-    # Movimiento de objeto
-    rend.scene[0].rotation.x += 10 * deltaTime
-    rend.scene[0].rotation.y += 10 * deltaTime
-    rend.scene[0].rotation.z += 10 * deltaTime
 
 
     for ev in pygame.event.get():
